@@ -1,0 +1,4 @@
+org.springframework.context.ApplicationListener=com.github.topikachu.keycloak.spring.support.listener.KeycloakListener
+org.springframework.boot.env.EnvironmentPostProcessor=com.github.topikachu.keycloak.spring.support.processor.KeycloakEnvironmentPostProcessor
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.github.topikachu.keycloak.spring.support.config.KeycloakConfig

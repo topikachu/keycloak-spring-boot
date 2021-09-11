@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.topikachu.keycloak</groupId>
+    <artifactId>keycloak-spring-boot-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <spring.boot.version>2.5.4</spring.boot.version>
+        <keycloak.version>15.0.2</keycloak.version>
+        <resteasy.starter.version>4.9.0.Final</resteasy.starter.version>
+        <resteasy.version>4.7.0.Final</resteasy.version>
+        <jboss-logging.version>3.4.2.Final</jboss-logging.version>
+        <infinispan.version>12.1.7.Final</infinispan.version>
+        <smallrye-metrics.version>2.4.6</smallrye-metrics.version> <!-- 2.4.0-2.4.2 causes compilation error with Java 11 on Maven -->
+        <liquibase.version>4.4.3</liquibase.version>
+        <liquibase.version>3.10.3</liquibase.version>
+        <auto-service.version>1.0</auto-service.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.infinispan</groupId>
+                <artifactId>infinispan-bom</artifactId>
+                <version>${infinispan.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+<build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+</build>
+    <modules>
+<!--        <module>keycloak-sample-app</module>-->
+        <module>keycloak-spring-boot-starter</module>
+        <module>keycloak-spring-boot-autoconfigure</module>
+
+    </modules>
+    <profiles>
+        <profile>
+            <id>sample</id>
+            <modules>
+                <module>keycloak-sample-app</module>
+            </modules>
+        </profile>
+
+    </profiles>
+</project>

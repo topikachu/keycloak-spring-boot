@@ -20,7 +20,7 @@ public class SpringPlatform extends SpringSupport implements PlatformProvider, S
     @Getter
     private ConfigurableApplicationContext applicationContext;
 
-    public void startWithSpring(ConfigurableApplicationContext context) {
+    public void install(ConfigurableApplicationContext context) {
         this.applicationContext = context;
         context.addApplicationListener(this);
     }

@@ -8,12 +8,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-public class KeycloakListener implements ApplicationListener<ApplicationPreparedEvent> {
+public class InstallKeycloakSpringApplicationListener implements ApplicationListener<ApplicationPreparedEvent> {
     @Override
     public void onApplicationEvent(ApplicationPreparedEvent event) {
         ConfigurableApplicationContext context = event.getApplicationContext();
         SpringPlatform.class.cast(Platform.getPlatform())
-                .startWithSpring(context);
+                .install(context);
         ConfigurableEnvironment environment = context.getEnvironment();
         Profile profile=new Profile(feature-> environment.getProperty(feature));
         Profile.setInstance(profile);

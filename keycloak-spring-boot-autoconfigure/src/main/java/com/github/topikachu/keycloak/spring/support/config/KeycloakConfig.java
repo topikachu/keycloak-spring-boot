@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilde
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.servlet.Filter;
 import java.util.Arrays;
@@ -103,6 +104,12 @@ public class KeycloakConfig {
         filter.setFilter(new KeycloakRequestFilter());
         filter.addUrlPatterns(customProperties.getServer().getKeycloakPath() + "/*");
         return filter;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "keycloakExecutor")
+    protected ThreadPoolTaskExecutor keycloakExecutor(){
+        return new ThreadPoolTaskExecutor();
     }
 
 

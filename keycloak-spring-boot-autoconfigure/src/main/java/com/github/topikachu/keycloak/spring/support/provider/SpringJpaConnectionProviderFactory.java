@@ -52,7 +52,7 @@ import static org.keycloak.models.utils.KeycloakModelUtils.runJobInTransaction;
 
 @Slf4j
 @AutoService(JpaConnectionProviderFactory.class)
-public class SpringJpaConnectionProviderFactory extends SpringSupport implements JpaConnectionProviderFactory, ServerInfoAwareProviderFactory {
+public class SpringJpaConnectionProviderFactory extends SpringSupportProviderFactory implements JpaConnectionProviderFactory, ServerInfoAwareProviderFactory {
 
     @NonNull
     @Autowired
@@ -75,9 +75,6 @@ public class SpringJpaConnectionProviderFactory extends SpringSupport implements
     enum MigrationStrategy {
         UPDATE, VALIDATE, MANUAL
     }
-
-
-    private Config.Scope config;
 
     private Map<String, String> operationalInfo;
 
@@ -106,15 +103,6 @@ public class SpringJpaConnectionProviderFactory extends SpringSupport implements
 
 
     @Override
-    public void init(Config.Scope config) {
-        this.config = config;
-        autowireSelf();
-    }
-
-
-
-
-    @Override
     @SneakyThrows
     public void postInit(KeycloakSessionFactory factory) {
         this.factory = factory;
@@ -133,9 +121,6 @@ public class SpringJpaConnectionProviderFactory extends SpringSupport implements
         }
     }
 
-    @Override
-    public void close() {
-    }
 
     @Override
     public String getId() {

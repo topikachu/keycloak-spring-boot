@@ -66,6 +66,8 @@ keycloak:
       migrationStrategy: "update"
       globalStatsInterval: -1
 
+  executors:
+    provider: "spring"
 
   realmCache:
     default:

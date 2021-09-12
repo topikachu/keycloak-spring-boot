@@ -11,6 +11,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.servlet.Filter;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
@@ -107,9 +109,9 @@ public class KeycloakConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "keycloakExecutor")
-    protected ThreadPoolTaskExecutor keycloakExecutor(){
-        return new ThreadPoolTaskExecutor();
+    @ConditionalOnMissingBean(name = "keycloakExecutorService")
+    protected ExecutorService keycloakExecutorService(){
+        return Executors.newCachedThreadPool();
     }
 
 

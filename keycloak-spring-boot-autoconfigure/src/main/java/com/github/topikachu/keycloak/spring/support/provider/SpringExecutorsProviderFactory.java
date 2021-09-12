@@ -5,7 +5,6 @@ import org.keycloak.executors.ExecutorsProvider;
 import org.keycloak.executors.ExecutorsProviderFactory;
 import org.keycloak.models.KeycloakSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ExecutorService;
 
@@ -13,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 public class SpringExecutorsProviderFactory extends SpringSupportProviderFactory implements ExecutorsProviderFactory {
 
     @Autowired
-    ThreadPoolTaskExecutor keycloakExecutor;
+    ExecutorService keycloakExecutorService;
 
     @Override
     public ExecutorsProvider create(KeycloakSession session) {
@@ -25,7 +24,7 @@ public class SpringExecutorsProviderFactory extends SpringSupportProviderFactory
 
             @Override
             public ExecutorService getExecutor(String taskType) {
-                return keycloakExecutor.getThreadPoolExecutor();
+                return keycloakExecutorService;
             }
         };
     }

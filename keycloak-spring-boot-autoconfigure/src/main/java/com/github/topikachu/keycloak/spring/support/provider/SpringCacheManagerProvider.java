@@ -7,7 +7,7 @@ import org.keycloak.cluster.ManagedCacheManagerProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoService(ManagedCacheManagerProvider.class)
-public class SpringManagedCacheManagerProvider extends SpringSupport implements ManagedCacheManagerProvider {
+public class SpringCacheManagerProvider extends SpringSupport implements ManagedCacheManagerProvider {
 
 
     @Autowired

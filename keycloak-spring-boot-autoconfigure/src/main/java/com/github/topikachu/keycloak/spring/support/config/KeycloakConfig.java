@@ -1,13 +1,15 @@
 package com.github.topikachu.keycloak.spring.support.config;
 
 import com.github.topikachu.keycloak.spring.support.filter.KeycloakRequestFilter;
+import com.github.topikachu.keycloak.spring.support.security.KeycloakAdminSecurityCustomizer;
+import com.github.topikachu.keycloak.spring.support.security.KeycloakPermissionEvaluator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.servlet.Filter;
 import java.util.Arrays;
@@ -104,15 +106,27 @@ public class KeycloakConfig {
         FilterRegistrationBean<Filter> filter = new FilterRegistrationBean<>();
         filter.setName("Keycloak Session Management");
         filter.setFilter(new KeycloakRequestFilter());
-        filter.addUrlPatterns(customProperties.getServer().getKeycloakPath() + "/*");
+        filter.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER - 50);
         return filter;
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "keycloakExecutorService")
-    protected ExecutorService keycloakExecutorService(){
+    protected ExecutorService keycloakExecutorService() {
         return Executors.newCachedThreadPool();
     }
 
+
+//    @Bean
+//    @ConditionalOnMissingBean(name = "keycloakAdminSecurityCustomizer")
+//    protected KeycloakAdminSecurityCustomizer keycloakAdminSecurityCustomizer() {
+//        return new KeycloakAdminSecurityCustomizer();
+//    }
+//
+//    @Bean
+//    @ConditionalOnMissingBean(name ="keycloakPermissionEvaluator")
+//    protected KeycloakPermissionEvaluator keycloakPermissionEvaluator(){
+//        return new KeycloakPermissionEvaluator();
+//    }
 
 }

@@ -1,3 +1,15 @@
+keycloak:
+  custom:
+    admin-user:
+      password: admin
+  profile:
+    feature:
+      scripts: enabled
+      upload_scripts: enabled
 spring:
-  liquibase:
-    enabled: false
+  jpa:
+    open-in-view: false
+#  mvc:
+#    servlet:
+#      path: /auth-ext
+

@@ -16,7 +16,7 @@ public class SpringExecutorsProviderFactory extends SpringSupportProviderFactory
 
     @Override
     public ExecutorsProvider create(KeycloakSession session) {
-        return new ExecutorsProvider(){
+        return new ExecutorsProvider() {
 
             @Override
             public void close() {
@@ -28,7 +28,6 @@ public class SpringExecutorsProviderFactory extends SpringSupportProviderFactory
             }
         };
     }
-
 
 
     @Override

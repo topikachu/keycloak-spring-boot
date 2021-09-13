@@ -16,10 +16,8 @@ import java.util.Map;
 public class SpringBootConfigProvider implements Config.ConfigProvider {
 
 
-
     @NonNull
     private KeycloakProperties keycloakProperties;
-
 
 
     @Override
@@ -29,17 +27,14 @@ public class SpringBootConfigProvider implements Config.ConfigProvider {
 
     @Override
     public Config.Scope scope(String... scopes) {
-
         if (scopes == null || scopes.length == 0) {
             return new MapScope(keycloakProperties);
         }
-
         String scope = scopes[0];
         Object currentScopeValue = keycloakProperties.get(scope);
         if (!(currentScopeValue instanceof Map)) {
             return new MapScope(Collections.emptyMap());
         }
-
         Map<String, Object> scopeMap = (Map<String, Object>) currentScopeValue;
         for (int i = 1; i < scopes.length; i++) {
             currentScopeValue = scopeMap.get(scopes[i]);
@@ -47,7 +42,6 @@ public class SpringBootConfigProvider implements Config.ConfigProvider {
                 scopeMap = (Map<String, Object>) currentScopeValue;
             }
         }
-
         return new MapScope(scopeMap);
     }
 
@@ -84,7 +78,6 @@ public class SpringBootConfigProvider implements Config.ConfigProvider {
             if (obj == null) {
                 return new String[0];
             }
-
             // TODO find better way to parse config yaml into a list instead of a LinkedHashMap in the first place
             if (obj instanceof LinkedHashMap) {
                 LinkedHashMap lm = (LinkedHashMap) obj;
@@ -95,7 +88,6 @@ public class SpringBootConfigProvider implements Config.ConfigProvider {
                 }
                 return strings;
             }
-
             return (String[]) obj;
         }
 

@@ -5,32 +5,27 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserModel;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.services.managers.AuthenticationManager;
-import org.keycloak.services.resources.admin.permissions.AdminPermissionEvaluator;
+import org.keycloak.services.resources.admin.AdminAuth;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class KeycloakAuthentication extends AbstractAuthenticationToken {
 
-    @Getter
-    private  AdminPermissionEvaluator evaluator;
-    @Getter
-    private  KeycloakSession session;
-    @Getter
-    private  AuthenticationManager.AuthResult authResult;
 
-    /**
-     * Creates a token with the supplied array of authResult.
-     *
-     * @param authResult the collection of <tt>GrantedAuthority</tt>s for the principal
-     *                    represented by this authentication object.
-     * @param evaluator
-     */
-    public KeycloakAuthentication(AuthenticationManager.AuthResult authResult, KeycloakSession session, AdminPermissionEvaluator evaluator) {
+    @Getter
+    private KeycloakSession session;
+    @Getter
+    private AuthenticationManager.AuthResult authResult;
+
+    @Getter
+    private final AdminAuth adminAuth;
+
+    public KeycloakAuthentication(AuthenticationManager.AuthResult authResult, KeycloakSession session, AdminAuth adminAuth) {
         super(null);
-        this.authResult =authResult;
-        this.session=session;
-        this.evaluator=evaluator;
+        this.authResult = authResult;
+        this.session = session;
+        this.adminAuth = adminAuth;
+        ;
     }
-
 
 
     @Override

@@ -9,7 +9,4 @@ keycloak:
 spring:
   jpa:
     open-in-view: false
-#  mvc:
-#    servlet:
-#      path: /auth-ext
 

@@ -9,7 +9,7 @@ abstract public class SpringSupport {
                 .getApplicationContext();
     }
 
-    protected void autowireSelf(){
+    protected void autowireSelf() {
         getApplicationContext().getAutowireCapableBeanFactory().autowireBean(this);
     }
 

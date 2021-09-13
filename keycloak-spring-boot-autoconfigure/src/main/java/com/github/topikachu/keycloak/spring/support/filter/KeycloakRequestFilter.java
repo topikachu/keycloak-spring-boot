@@ -1,6 +1,5 @@
 package com.github.topikachu.keycloak.spring.support.filter;
 
-import org.keycloak.common.ClientConnection;
 import org.keycloak.services.filters.AbstractRequestFilter;
 
 import javax.servlet.*;
@@ -12,15 +11,13 @@ public class KeycloakRequestFilter extends AbstractRequestFilter implements Filt
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws UnsupportedEncodingException {
-
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         request.setCharacterEncoding("UTF-8");
-
         org.keycloak.common.ClientConnection clientConnection = createClientConnection(request);
         filter(clientConnection, (session) -> {
             try {
                 servletRequest.setAttribute("KEYCLOAK_CLIENT_CONNECTION", clientConnection);
-                servletRequest.setAttribute("KEYCLOAK_SESSION",session);
+                servletRequest.setAttribute("KEYCLOAK_SESSION", session);
                 filterChain.doFilter(servletRequest, servletResponse);
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -53,11 +50,9 @@ public class KeycloakRequestFilter extends AbstractRequestFilter implements Filt
         @Override
         public String getRemoteAddr() {
             String forwardedFor = request.getHeader("X-Forwarded-For");
-
             if (forwardedFor != null) {
                 return forwardedFor;
             }
-
             return request.getRemoteAddr();
         }
 

@@ -57,7 +57,7 @@ keycloak:
     interval: 900
 
   connectionsHttpClient:
-    default: {}
+    default: { }
 
   connectionsJpa:
     provider: "spring"
@@ -87,7 +87,7 @@ keycloak:
       remoteStorePort: 11222
       hotrodProtocolVersion: ""
 
-  scripting: {}
+  scripting: { }
 
   mapStorage:
     provider: concurrenthashmap
@@ -105,7 +105,7 @@ keycloak:
 
   "login-protocol":
     "saml":
-      "knownProtocols": ["http=${server.port}", "https=${server.port}"]
+      "knownProtocols": [ "http=${server.port}", "https=${server.port}" ]
 
   "x509cert-lookup":
     provider: "default"

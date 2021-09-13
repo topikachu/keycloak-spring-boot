@@ -1,7 +1,6 @@
 package com.github.topikachu.keycloak.spring.support.provider;
 
 import com.google.auto.service.AutoService;
-
 import org.jboss.resteasy.core.ResteasyContext;
 
 @AutoService(org.keycloak.common.util.ResteasyProvider.class)

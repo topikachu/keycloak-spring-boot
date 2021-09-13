@@ -1,20 +1,30 @@
 package com.github.topikachu.keycloak.spring.support.config;
 
 import com.github.topikachu.keycloak.spring.support.filter.KeycloakRequestFilter;
-import com.github.topikachu.keycloak.spring.support.security.KeycloakAdminSecurityCustomizer;
+import com.github.topikachu.keycloak.spring.support.security.KeycloakAdminCredentialFilter;
 import com.github.topikachu.keycloak.spring.support.security.KeycloakPermissionEvaluator;
+import com.github.topikachu.keycloak.spring.support.security.KeycloakSecurityObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
+import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.Filter;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
 @org.springframework.context.annotation.Configuration(proxyBeanMethods = false)
@@ -102,7 +112,7 @@ public class KeycloakConfig {
 
     @Bean
     @ConditionalOnMissingBean(name = "keycloakSessionManagement")
-    protected FilterRegistrationBean<Filter> keycloakSessionManagement(KeycloakCustomProperties customProperties) {
+    protected FilterRegistrationBean<Filter> keycloakSessionManagement() {
         FilterRegistrationBean<Filter> filter = new FilterRegistrationBean<>();
         filter.setName("Keycloak Session Management");
         filter.setFilter(new KeycloakRequestFilter());
@@ -117,16 +127,45 @@ public class KeycloakConfig {
     }
 
 
-//    @Bean
-//    @ConditionalOnMissingBean(name = "keycloakAdminSecurityCustomizer")
-//    protected KeycloakAdminSecurityCustomizer keycloakAdminSecurityCustomizer() {
-//        return new KeycloakAdminSecurityCustomizer();
-//    }
-//
-//    @Bean
-//    @ConditionalOnMissingBean(name ="keycloakPermissionEvaluator")
-//    protected KeycloakPermissionEvaluator keycloakPermissionEvaluator(){
-//        return new KeycloakPermissionEvaluator();
-//    }
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnDefaultWebSecurity
+    @ConditionalOnClass(name = "org.springframework.security.web.SecurityFilterChain")
+    static class KeycloakSecurityFilterChainConfiguration {
+
+        @Bean
+        SecurityFilterChain oauth2SecurityFilterChain(KeycloakCustomProperties customProperties, HttpSecurity http) throws Exception {
+            return http.formLogin().disable()
+                    .sessionManagement()
+                    .sessionCreationPolicy(STATELESS)
+                    .and()
+                    .authorizeRequests()
+                    .anyRequest().authenticated()
+                    .and()
+                    .addFilterAt(new KeycloakAdminCredentialFilter(customProperties.getServer().getKeycloakPath()), UsernamePasswordAuthenticationFilter.class)
+                    .getOrBuild();
+
+        }
+
+
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnClass(name = "org.springframework.security.access.PermissionEvaluator")
+    @ConditionalOnProperty(value = "keycloak.security.permission.evaluator.enabled", matchIfMissing = true)
+    static class KeycloakPermissionEvaluatorConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(name = "keycloakPermissionEvaluator")
+        protected KeycloakPermissionEvaluator keycloakPermissionEvaluator() {
+            return new KeycloakPermissionEvaluator();
+        }
+
+        @Bean
+        protected KeycloakSecurityObject.KeycloakSecurityObjectBuilderBean securityObjectBuilder() {
+            return new KeycloakSecurityObject.KeycloakSecurityObjectBuilderBean();
+        }
+
+    }
+
 
 }

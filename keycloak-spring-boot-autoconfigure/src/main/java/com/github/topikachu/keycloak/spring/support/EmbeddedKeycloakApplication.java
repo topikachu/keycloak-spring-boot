@@ -38,7 +38,6 @@ public class EmbeddedKeycloakApplication extends KeycloakApplication {
     private KeycloakCustomProperties customProperties;
 
 
-
     @Override
     protected ExportImportManager bootstrap() {
         ExportImportManager exportImportManager = super.bootstrap();
@@ -50,7 +49,7 @@ public class EmbeddedKeycloakApplication extends KeycloakApplication {
     protected void loadConfig() {
         ConfigurableApplicationContext applicationContext = getApplicationContext();
         applicationContext.getAutowireCapableBeanFactory().autowireBean(this);
-        SpringBootConfigProvider springBootConfigProvider=new SpringBootConfigProvider(keycloakProperties);
+        SpringBootConfigProvider springBootConfigProvider = new SpringBootConfigProvider(keycloakProperties);
         Config.init(springBootConfigProvider);
     }
 

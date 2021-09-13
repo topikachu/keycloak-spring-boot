@@ -15,7 +15,7 @@ public class InstallKeycloakSpringApplicationListener implements ApplicationList
         SpringPlatform.class.cast(Platform.getPlatform())
                 .install(context);
         ConfigurableEnvironment environment = context.getEnvironment();
-        Profile profile=new Profile(feature-> environment.getProperty(feature));
+        Profile profile = new Profile(feature -> environment.getProperty(feature));
         Profile.setInstance(profile);
     }
 }

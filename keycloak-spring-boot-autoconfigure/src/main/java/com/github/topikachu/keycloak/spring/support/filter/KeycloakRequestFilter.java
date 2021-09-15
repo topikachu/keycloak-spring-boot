@@ -1,31 +1,36 @@
 package com.github.topikachu.keycloak.spring.support.filter;
 
+import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.services.filters.AbstractRequestFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 public class KeycloakRequestFilter extends AbstractRequestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws UnsupportedEncodingException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        request.setCharacterEncoding("UTF-8");
-        org.keycloak.common.ClientConnection clientConnection = createClientConnection(request);
-        filter(clientConnection, (session) -> {
-            try {
-                servletRequest.setAttribute("KEYCLOAK_CLIENT_CONNECTION", clientConnection);
-                servletRequest.setAttribute("KEYCLOAK_SESSION", session);
-                filterChain.doFilter(servletRequest, servletResponse);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+            throws IOException, ServletException {
+        KeycloakSessionFactory sessionFactory = getSessionFactory();
+        if (sessionFactory != null) {
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            ClientConnection clientConnection = createClientConnection(request);
+            filter(clientConnection, (session) -> {
+                try {
+                    servletRequest.setAttribute("KEYCLOAK_CLIENT_CONNECTION", clientConnection);
+                    servletRequest.setAttribute("KEYCLOAK_SESSION", session);
+                    filterChain.doFilter(servletRequest, servletResponse);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
     }
 
-    protected org.keycloak.common.ClientConnection createClientConnection(HttpServletRequest request) {
+    protected ClientConnection createClientConnection(HttpServletRequest request) {
         return new ClientConnection(request);
     }
 

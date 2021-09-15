@@ -1,6 +1,7 @@
 package com.github.topikachu.keycloak.spring.support.config;
 
 import com.github.topikachu.keycloak.spring.support.filter.KeycloakRequestFilter;
+import com.github.topikachu.keycloak.spring.support.healthh.KeycloakHealthIndicator;
 import com.github.topikachu.keycloak.spring.support.security.KeycloakAdminCredentialFilter;
 import com.github.topikachu.keycloak.spring.support.security.KeycloakPermissionEvaluator;
 import com.github.topikachu.keycloak.spring.support.security.KeycloakSecurityObject;
@@ -164,6 +165,19 @@ public class KeycloakConfig {
         protected KeycloakSecurityObject.KeycloakSecurityObjectBuilderBean securityObjectBuilder() {
             return new KeycloakSecurityObject.KeycloakSecurityObjectBuilderBean();
         }
+
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")
+    static class KeycloakActuateConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(name = "keycloakHealthIndicator")
+        protected KeycloakHealthIndicator keycloakHealthIndicator() {
+            return new KeycloakHealthIndicator();
+        }
+
 
     }
 

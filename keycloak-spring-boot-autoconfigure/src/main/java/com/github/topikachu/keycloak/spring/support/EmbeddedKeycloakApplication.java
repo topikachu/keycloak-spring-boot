@@ -3,6 +3,7 @@ package com.github.topikachu.keycloak.spring.support;
 
 import com.github.topikachu.keycloak.spring.support.config.KeycloakCustomProperties;
 import com.github.topikachu.keycloak.spring.support.config.KeycloakProperties;
+import com.github.topikachu.keycloak.spring.support.event.KeycloakReadyEvent;
 import com.github.topikachu.keycloak.spring.support.provider.SpringBootConfigProvider;
 import com.github.topikachu.keycloak.spring.support.provider.SpringPlatform;
 import lombok.NonNull;
@@ -11,6 +12,7 @@ import org.keycloak.Config;
 import org.keycloak.exportimport.ExportImportConfig;
 import org.keycloak.exportimport.ExportImportManager;
 import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.KeycloakTransactionManager;
 import org.keycloak.platform.Platform;
 import org.keycloak.services.ServicesLogger;
@@ -119,5 +121,14 @@ public class EmbeddedKeycloakApplication extends KeycloakApplication {
         log.info("Keycloak realm configuration import finished.");
     }
 
+    @Override
+    protected void startup() {
+        super.startup();
+        KeycloakSessionFactory sessionFactory = getSessionFactory();
+        if (sessionFactory != null) {
+            sessionFactory.register(event -> getApplicationContext().publishEvent(event));
+            getApplicationContext().publishEvent(new KeycloakReadyEvent(this, sessionFactory));
+        }
 
+    }
 }

@@ -2,11 +2,12 @@ keycloak:
   custom:
     admin-user:
       password: admin
-  profile:
-    feature:
-      scripts: enabled
-      upload_scripts: enabled
+
 spring:
   jpa:
     open-in-view: false
 
+#management:
+#  endpoint:
+#    health:
+#      show-details: always

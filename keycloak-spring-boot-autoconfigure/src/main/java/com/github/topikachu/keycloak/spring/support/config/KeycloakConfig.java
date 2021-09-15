@@ -3,12 +3,11 @@ package com.github.topikachu.keycloak.spring.support.config;
 import com.github.topikachu.keycloak.spring.support.filter.KeycloakRequestFilter;
 import com.github.topikachu.keycloak.spring.support.healthh.KeycloakHealthIndicator;
 import com.github.topikachu.keycloak.spring.support.security.KeycloakAdminCredentialFilter;
-import com.github.topikachu.keycloak.spring.support.security.KeycloakPermissionEvaluator;
-import com.github.topikachu.keycloak.spring.support.security.KeycloakSecurityObject;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
 import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -150,23 +149,7 @@ public class KeycloakConfig {
 
     }
 
-    @Configuration(proxyBeanMethods = false)
-    @ConditionalOnClass(name = "org.springframework.security.access.PermissionEvaluator")
-    @ConditionalOnProperty(value = "keycloak.security.permission.evaluator.enabled", matchIfMissing = true)
-    static class KeycloakPermissionEvaluatorConfiguration {
 
-        @Bean
-        @ConditionalOnMissingBean(name = "keycloakPermissionEvaluator")
-        protected KeycloakPermissionEvaluator keycloakPermissionEvaluator() {
-            return new KeycloakPermissionEvaluator();
-        }
-
-        @Bean
-        protected KeycloakSecurityObject.KeycloakSecurityObjectBuilderBean securityObjectBuilder() {
-            return new KeycloakSecurityObject.KeycloakSecurityObjectBuilderBean();
-        }
-
-    }
 
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(name = "org.springframework.boot.actuate.health.HealthIndicator")

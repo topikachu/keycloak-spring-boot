@@ -38,7 +38,8 @@ public class SecurityConfig {
                 .antMatchers("/admin/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers(GET, "/admin/realms/{realm}/{resource}").access("hasPermission(@securityObjectBuilder.build(#realm,#resource),'canList')")
+                .anyRequest()
+                .authenticated()
                 .and()
                 .addFilterAt(new KeycloakAdminCredentialFilter(customProperties.getServer().getKeycloakPath()),
                         UsernamePasswordAuthenticationFilter.class)
